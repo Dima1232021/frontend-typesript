@@ -4,8 +4,11 @@ import React from "react";
 import { rules } from "../utils/rules";
 
 const LoginForm: React.FC = () => {
+  const submit = () => {
+    console.log("true");
+  };
   return (
-    <Form>
+    <Form onFinish={submit}>
       <Form.Item
         label="Ім'я користувача"
         name="username"

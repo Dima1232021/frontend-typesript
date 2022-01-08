@@ -1,17 +1,21 @@
 import { Layout, Menu, Row } from "antd";
 import React from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { useTypedSelector } from "../hooks/useTypedSelector";
 import { RouteNames } from "../router";
+import { AuthActionCreators } from "../store/reducers/auth/action-creators";
 const Navbar: React.FC = () => {
+  const dispatch = useDispatch();
+
   const router = useHistory();
-  const { isAuth } = useTypedSelector((state) => state.auth);
+  const { isAuth, user } = useTypedSelector((state) => state.auth);
   return (
     <Layout.Header>
       <Row justify="end">
         {isAuth ? (
           <>
-            <div style={{ color: "white" }}>Ulbit</div>{" "}
+            <div style={{ color: "white" }}>{user.username}</div>{" "}
             <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]}>
               <Menu.Item onClick={() => router.push(RouteNames.EVENT)} key="1">
                 Event
@@ -25,7 +29,10 @@ const Navbar: React.FC = () => {
               >
                 Create Game
               </Menu.Item>
-              <Menu.Item onClick={() => console.log("Exit")} key="4">
+              <Menu.Item
+                onClick={() => dispatch(AuthActionCreators.logout())}
+                key="4"
+              >
                 Exit
               </Menu.Item>
             </Menu>

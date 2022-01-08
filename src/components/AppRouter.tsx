@@ -1,23 +1,40 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { privateRoutes, publicRoutes, RouteNames } from "../router";
+import {
+  authRoutes,
+  createGameRoutes,
+  mainRoutes,
+  privateRoutes,
+  RouteNames,
+} from "../router";
+import { useHistory } from "react-router";
+import { useTypedSelector } from "../hooks/useTypedSelector";
 
 const AppRouter: React.FC = () => {
-  const auth = false;
+  const router = useHistory();
+  const { isAuth } = useTypedSelector((state) => state.auth);
 
-  return auth ? (
+  console.log("pathname:", router.location.pathname);
+
+  return isAuth ? (
     <Switch>
       {privateRoutes.map(({ path, component, exact }) => (
+        <Route path={path} component={component} exact={exact} key={path} />
+      ))}
+      {mainRoutes.map(({ path, component, exact }) => (
+        <Route path={path} component={component} exact={exact} key={path} />
+      ))}
+      {createGameRoutes.map(({ path, component, exact }) => (
         <Route path={path} component={component} exact={exact} key={path} />
       ))}
       <Redirect to={RouteNames.EVENT} />
     </Switch>
   ) : (
     <Switch>
-      {publicRoutes.map(({ path, component, exact }) => (
+      {authRoutes.map(({ path, component, exact }) => (
         <Route path={path} component={component} exact={exact} key={path} />
       ))}
-      <Redirect to={RouteNames.LOGIN} />
+      <Redirect to={RouteNames.AUTH} />
     </Switch>
   );
 };
